@@ -1,9 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+
 import {
   Header, HeaderItem, HeaderSignIn, HeaderSignUp,
 } from './style';
+
 import {
   logOutUser,
 } from '../../store/actions';
