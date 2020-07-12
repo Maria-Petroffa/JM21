@@ -1,6 +1,8 @@
 import React from 'react';
 
-import { Route, Switch, BrowserRouter as Router } from 'react-router-dom';
+import {
+  Redirect, Route, Switch, BrowserRouter as Router,
+} from 'react-router-dom';
 
 import SignIn from './form/signIn';
 import SignUp from './form/signUp';
@@ -28,6 +30,7 @@ class App extends React.Component {
                 <SignUp />
               </FormWrap>
             </Route>
+            <Redirect from="/" to="/home" />
           </Switch>
         </Content>
       </Router>
