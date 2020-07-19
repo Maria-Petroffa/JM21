@@ -5,49 +5,43 @@ import { Form, Input, Button } from 'antd';
 import { Link, Redirect } from 'react-router-dom';
 
 import { connect } from 'react-redux';
+import { useFormik } from 'formik';
 import {
-  Label, FormHeader, FormFooter, FormTitle,
+  Label, FormHeader, FormFooter, FormTitle, FormWrap,
 } from './style';
 import {
-  singInInputEmail,
-  singInInputPassword,
-  authentification,
+  authentificationUser,
 } from '../../store/actions';
+import { signUpPage, mainPage } from '../../services/routs';
 
 const SignIn = ({
-  onChangeEmail,
-  onChangePassword,
   logInUser,
   currentUser,
 }) => {
+  const formik = useFormik({
+    initialValues: {
+      email: '',
+      password: '',
+    },
+    onSubmit: (values) => {
+      const { email, password } = values;
+      const user = {
+        user: {
+          email,
+          password,
+        },
+      };
+
+      logInUser(user);
+    },
+  });
+
   if (currentUser !== 0) {
-    return <Redirect to="/home" />;
+    return <Redirect to={mainPage} />;
   }
 
-  const onFinish = (values) => {
-    const { email, password } = values;
-    const user = {
-      user: {
-        email,
-        password,
-      },
-    };
-
-    logInUser(user);
-  };
-
-  const handleChange = (element) => {
-    const { value, id } = element.target;
-    if (id === 'email') {
-      onChangeEmail(value);
-    }
-    if (id === 'password') {
-      onChangePassword(value);
-    }
-  };
-
   return (
-    <>
+    <FormWrap>
       <FormHeader>
         <FormTitle>Sign In</FormTitle>
       </FormHeader>
@@ -57,7 +51,7 @@ const SignIn = ({
         initialValues={{
           remember: true,
         }}
-        onFinish={onFinish}
+        onFinish={formik.handleSubmit}
       >
         <Label>Email address</Label>
         <Form.Item
@@ -76,7 +70,8 @@ const SignIn = ({
           <Input
             id="email"
             placeholder="Email address"
-            onChange={handleChange}
+            onChange={formik.handleChange}
+            value={formik.values.email}
           />
         </Form.Item>
         <Label>Password</Label>
@@ -93,7 +88,8 @@ const SignIn = ({
             id="password"
             type="password"
             placeholder="Password"
-            onChange={handleChange}
+            onChange={formik.handleChange}
+            value={formik.values.password}
           />
         </Form.Item>
         <Form.Item>
@@ -108,21 +104,19 @@ const SignIn = ({
             <FormTitle>
               Don’t have an account?
               {' '}
-              <Link to="/signup">Sign Un</Link>
+              <Link to={signUpPage}>Sign Un</Link>
             </FormTitle>
           </FormFooter>
         </Form.Item>
       </Form>
-    </>
+    </FormWrap>
   );
 };
 
 const mapStateToProps = (state) => state;
 
 const mapDispathToProps = (dispatch) => ({
-  onChangeEmail: (value) => dispatch(singInInputEmail(value)),
-  onChangePassword: (value) => dispatch(singInInputPassword(value)),
-  logInUser: (value) => dispatch(authentification(value)()),
+  logInUser: (value) => dispatch(authentificationUser(value)),
 });
 
 export default connect(mapStateToProps, mapDispathToProps)(SignIn);

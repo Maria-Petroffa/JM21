@@ -2,63 +2,52 @@ import React from 'react';
 import {
   Form, Input, Checkbox, Button,
 } from 'antd';
-import { Link, Redirect } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { useFormik } from 'formik';
 import {
   Label, FormHeader, FormFooter, FormTitle, Line,
+  FormWrap,
 } from './style';
-import {
-  newUserAddEmail,
-  newUserAddUsername,
-  newUserAddPassword,
-  createUser,
-} from '../../store/actions';
+import { createUser } from '../../store/actions';
+import { signInPage } from '../../services/routs';
 
-const SignUp = ({
-  onChangeUsername,
-  onChangePassword,
-  onChangeEmail,
-  currentUser,
-  createNewUser,
-}) => {
-  if (currentUser !== 0) {
-    return <Redirect to="/home" />;
-  }
-
+const SignUp = ({ currentUser, createNewUser, newUser }) => {
   const [form] = Form.useForm();
-
-  const onFinish = (values) => {
-    const { email, password, username } = values;
-    const newUser = {
-      user: {
-        email,
-        password,
-        username,
-      },
-    };
-    createNewUser(newUser);
-  };
-
-  const handleChange = (element) => {
-    const { value, id } = element.target;
-    if (id === 'email') {
-      onChangeEmail(value);
-    }
-    if (id === 'password') {
-      onChangePassword(value);
-    }
-    if (id === 'username') {
-      onChangeUsername(value);
-    }
-  };
+  const formik = useFormik({
+    initialValues: {
+      email: '',
+      username: '',
+      password: '',
+    },
+    onSubmit: (values) => {
+      const { email, password, username } = values;
+      const newUser = {
+        user: {
+          email,
+          password,
+          username,
+        },
+      };
+      createNewUser(newUser);
+    },
+  });
 
   return (
-    <>
+    <FormWrap>
       <FormHeader>
-        <FormTitle>Create new account</FormTitle>
+        <FormTitle> Create new account </FormTitle>
+        {' '}
       </FormHeader>
-      <Form form={form} name="register" onFinish={onFinish} initialValues={{}}>
-        <Label>Username</Label>
+      {' '}
+      <Form
+        form={form}
+        name="register"
+        onFinish={formik.handleSubmit}
+        initialValues={{}}
+      >
+        <Label> Username </Label>
+        {' '}
         <Form.Item
           name="username"
           rules={[
@@ -69,9 +58,16 @@ const SignUp = ({
             },
           ]}
         >
-          <Input onChange={handleChange} id="username" placeholder="Username" />
+          <Input
+            onChange={formik.handleChange}
+            value={formik.values.username}
+            id="username"
+            placeholder="Username"
+          />
         </Form.Item>
-        <Label>Email address</Label>
+        {' '}
+        <Label> Email address </Label>
+        {' '}
         <Form.Item
           name="email"
           rules={[
@@ -86,12 +82,15 @@ const SignUp = ({
           ]}
         >
           <Input
-            onChange={handleChange}
+            onChange={formik.handleChange}
+            value={formik.values.email}
             id="email"
             placeholder="Email address"
           />
         </Form.Item>
-        <Label>Password</Label>
+        {' '}
+        <Label> Password </Label>
+        {' '}
         <Form.Item
           name="password"
           rules={[
@@ -107,12 +106,15 @@ const SignUp = ({
           hasFeedback
         >
           <Input.Password
-            onChange={handleChange}
+            onChange={formik.handleChange}
+            value={formik.values.password}
             id="password"
             placeholder="Password"
           />
         </Form.Item>
-        <Label>Repeat Password</Label>
+        {' '}
+        <Label> Repeat Password </Label>
+        {' '}
         <Form.Item
           name="confirm"
           dependencies={['password']}
@@ -135,8 +137,8 @@ const SignUp = ({
         >
           <Input.Password placeholder="Password" />
         </Form.Item>
+        {' '}
         <Line />
-
         <Form.Item
           name="agreement"
           valuePropName="checked"
@@ -150,32 +152,37 @@ const SignUp = ({
         >
           <Checkbox>
             I agree to the processing of my personal information
+            {' '}
           </Checkbox>
         </Form.Item>
         <Form.Item>
           <Button type="primary" htmlType="submit">
             Create
+            {' '}
           </Button>
+          {' '}
         </Form.Item>
+        {' '}
         <FormFooter>
           <FormTitle>
-            Already have an account?
+            Already have an account ?
             {' '}
-            <Link to="/signin">Sign In</Link>
+            <Link to={signInPage}> Sign In </Link>
+            {' '}
           </FormTitle>
+          {' '}
         </FormFooter>
+        {' '}
       </Form>
-    </>
+      {' '}
+    </FormWrap>
   );
 };
 
 const mapStateToProps = (state) => state;
 
 const mapDispathToProps = (dispatch) => ({
-  onChangeUsername: (value) => dispatch(newUserAddUsername(value)),
-  onChangePassword: (value) => dispatch(newUserAddPassword(value)),
-  onChangeEmail: (value) => dispatch(newUserAddEmail(value)),
-  createNewUser: (value) => dispatch(createUser(value)()),
+  createNewUser: (value) => dispatch(createUser(value)),
 });
 
 export default connect(mapStateToProps, mapDispathToProps)(SignUp);

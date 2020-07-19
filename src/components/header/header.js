@@ -9,6 +9,7 @@ import {
 import {
   logOutUser,
 } from '../../store/actions';
+import { signInPage } from '../../services/routs';
 
 class HeaderPage extends React.Component {
   signInHeader = () => {
@@ -16,9 +17,9 @@ class HeaderPage extends React.Component {
     if (currentUser !== 0) {
       return (
         <HeaderItem>
-          <HeaderSignIn>{currentUser.user.username}</HeaderSignIn>
+          <HeaderSignIn>{currentUser.username}</HeaderSignIn>
           <HeaderSignUp>
-            <Link onClick={logOut} to="/signin">
+            <Link onClick={logOut} to={signInPage}>
               Log Out
             </Link>
           </HeaderSignUp>

@@ -1,64 +1,71 @@
-import axios from 'axios';
-import { registrationUser, authenticationUser } from '../services/path';
+import {
+  registrationUserRequest,
+  authentificationUserRequest,
+  currentUserRequest,
+} from '../services/services';
 
-export const newUserAddEmail = (email = '') => ({ type: 'ADD_EMAIL', email });
+import { createUserErrorMessage, authentificationUserErrorMessage } from '../components/helpers';
 
-export const newUserAddPassword = (password = '') => ({
-  type: 'ADD_PASSWORD',
-  password,
+export const logInUserRequest = () => ({ type: 'LOGIN_USER_REQUEST' });
+export const logInUserSuccess = (response) => ({
+  type: 'LOGIN_USER_SUCCESS',
+  response,
+});
+export const logInUserFailure = (response) => ({
+  type: 'LOGIN_USER_FAILURE',
+  response,
 });
 
-export const newUserAddUsername = (username = '') => ({
-  type: 'ADD_USERNAME',
-  username,
+export const createUserRequest = () => ({ type: 'CREATE_USER_REQUEST' });
+export const createUserSuccess = (response) => ({
+  type: 'CREATE_USER_SUCCESS',
+  response,
+});
+export const createUserFailure = (response) => ({
+  type: 'CREATE_USER_FAILURE',
+  response,
 });
 
-export const singInInputEmail = (email = '') => ({
-  type: 'INPUT_EMAIL',
-  email,
+export const checkCurrentUserRequest = () => ({ type: 'CHECK_USER_REQUEST' });
+export const checkCurrentUserSuccess = (response) => ({
+  type: 'CHECK_USER_SUCCESS',
+  response,
+});
+export const checkCurrentUserFailure = (response) => ({
+  type: 'CHECK_USER_FAILURE',
+  response,
 });
 
-export const singInInputPassword = (password = '') => ({
-  type: 'INPUT_PASSWORD',
-  password,
-});
-
-export const logInUser = (value) => ({ type: 'LOGIN_USER', value });
 export const logOutUser = () => ({ type: 'LOGOUT_USER' });
 
-export const createUserSuccess = (value) => ({
-  type: 'CREATE_USER_SUCCESS',
-  value,
-});
-export const createUserFailure = (value) => ({
-  type: 'CREATE_USER_FAILURE',
-  value,
-});
-
-export const createUser = (value) => () => (dispatch) => {
-  axios
-    .post(registrationUser, value)
-    .then((response) => {
-      dispatch(createUserSuccess(response.data));
-    })
-    .catch((error) => {
-      const { email, username } = error.response.data.errors;
-      const errorEmailMessage = email ? `Email ${email}` : '';
-      const errorUsernameMessage = username ? `Username ${username}` : '';
-      const errorMessage = `${errorEmailMessage} ${errorUsernameMessage}`;
-      alert(errorMessage);
-    });
+export const createUser = (value) => async (dispatch) => {
+  dispatch(createUserRequest());
+  try {
+    const response = await registrationUserRequest(value);
+    dispatch(createUserSuccess(response));
+  } catch (error) {
+    dispatch(createUserFailure(error));
+    createUserErrorMessage(error);
+  }
 };
 
-export const authentification = (values) => () => (dispatch) => {
-  axios
-    .post(authenticationUser, values)
-    .then((response) => {
-      dispatch(logInUser(response.data));
-    })
-    .catch((error) => {
-      const resp = error.response.data.errors['email or password'];
-      const errorMessage = `Email or password ${resp}`;
-      alert(errorMessage);
-    });
+export const authentificationUser = (value) => async (dispatch) => {
+  dispatch(logInUserRequest());
+  try {
+    const response = await authentificationUserRequest(value);
+    dispatch(logInUserSuccess(response));
+  } catch (error) {
+    dispatch(logInUserFailure(error));
+    authentificationUserErrorMessage(error);
+  }
+};
+
+export const currentUser = (value) => async (dispatch) => {
+  dispatch(checkCurrentUserRequest());
+  try {
+    const response = await currentUserRequest(value);
+    dispatch(checkCurrentUserSuccess(response));
+  } catch (error) {
+    dispatch(checkCurrentUserFailure(error));
+  }
 };

@@ -1,46 +1,52 @@
 import { combineReducers } from 'redux';
+import { setUserToken, deleteUserToken } from '../components/helpers';
 
 const newUser = (state = 0, action) => {
-  const {
-    type, email, password, username,
-  } = action;
+  const { type, response } = action;
   switch (type) {
-    case 'ADD_EMAIL':
-      return { ...state, email };
-    case 'ADD_PASSWORD':
-      return { ...state, password };
-    case 'ADD_USERNAME':
-      return { ...state, username };
-    case 'CREATE_USER_SUCCESS':
-      return 0;
+    case 'CREATE_USER_REQUEST':
+      return state;
     case 'CREATE_USER_FAILURE':
+      return { error: response };
+    case 'CREATE_USER_SUCCESS':
       return 0;
     default:
       return state;
   }
 };
 
-const authenticationUser = (state = {}, action) => {
-  const { type, email, password } = action;
+const authenticationUser = (state = 0, action) => {
+  const { type, response } = action;
   switch (type) {
-    case 'INPUT_EMAIL':
-      return { ...state, email };
-    case 'INPUT_PASSWORD':
-      return { ...state, password };
+    case 'LOGIN_USER_REQUEST':
+      return state;
+    case 'LOGIN_USER_FAILURE':
+      return { error: response };
+    case 'LOGIN_USER_SUCCESS':
+      return 0;
     default:
       return state;
   }
 };
 
 const currentUser = (state = 0, action) => {
-  const { type, value } = action;
+  const { type, response } = action;
   switch (type) {
-    case 'LOGIN_USER':
-      return value;
+    case 'CHECK_USER_REQUEST':
+      return state;
+    case 'CHECK_USER_SUCCESS':
+      return response.data.user;
+    case 'CHECK_USER_FAILURE':
+      return { error: response };
+    case 'LOGIN_USER_SUCCESS':
+      setUserToken(response.data.user.token);
+      return response.data.user;
     case 'LOGOUT_USER':
+      deleteUserToken();
       return 0;
     case 'CREATE_USER_SUCCESS':
-      return value;
+      setUserToken(response.data.user.token);
+      return response.data.user;
     default:
       return state;
   }
