@@ -11,6 +11,7 @@ import {
 } from './style';
 import { createUser } from '../../store/actions';
 import { signInPage } from '../../services/routs';
+import { setUserToken } from '../../utils/helpers';
 
 const SignUp = ({ currentUser, createNewUser, newUser }) => {
   const [form] = Form.useForm();
@@ -30,6 +31,7 @@ const SignUp = ({ currentUser, createNewUser, newUser }) => {
         },
       };
       createNewUser(newUser);
+      setUserToken(currentUser.token);
     },
   });
 

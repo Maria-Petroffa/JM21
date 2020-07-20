@@ -10,6 +10,7 @@ import {
   logOutUser,
 } from '../../store/actions';
 import { signInPage } from '../../services/routs';
+import { deleteUserToken } from '../../utils/helpers';
 
 class HeaderPage extends React.Component {
   signInHeader = () => {
@@ -42,7 +43,10 @@ class HeaderPage extends React.Component {
 const mapStateToProps = (state) => state;
 
 const mapDispathToProps = (dispatch) => ({
-  logOut: () => dispatch(logOutUser()),
+  logOut: () => {
+    deleteUserToken();
+    dispatch(logOutUser());
+  },
 });
 
 export default connect(mapStateToProps, mapDispathToProps)(HeaderPage);

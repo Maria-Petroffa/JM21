@@ -1,5 +1,4 @@
 export const createUserErrorMessage = (error) => {
-  console.log(error.response);
   if (error.response.status === 422) {
     const { email, username } = error.response.data.errors;
 

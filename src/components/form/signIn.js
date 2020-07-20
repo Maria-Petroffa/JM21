@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Form, Input, Button } from 'antd';
 
-import { Link, Redirect } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import { connect } from 'react-redux';
 import { useFormik } from 'formik';
@@ -12,7 +12,7 @@ import {
 import {
   authentificationUser,
 } from '../../store/actions';
-import { signUpPage, mainPage } from '../../services/routs';
+import { signUpPage } from '../../services/routs';
 
 const SignIn = ({
   logInUser,
@@ -35,10 +35,6 @@ const SignIn = ({
       logInUser(user);
     },
   });
-
-  if (currentUser !== 0) {
-    return <Redirect to={mainPage} />;
-  }
 
   return (
     <FormWrap>

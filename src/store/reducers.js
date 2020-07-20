@@ -1,5 +1,4 @@
 import { combineReducers } from 'redux';
-import { setUserToken, deleteUserToken } from '../components/helpers';
 
 const newUser = (state = 0, action) => {
   const { type, response } = action;
@@ -39,13 +38,12 @@ const currentUser = (state = 0, action) => {
     case 'CHECK_USER_FAILURE':
       return { error: response };
     case 'LOGIN_USER_SUCCESS':
-      setUserToken(response.data.user.token);
+
       return response.data.user;
     case 'LOGOUT_USER':
-      deleteUserToken();
+
       return 0;
     case 'CREATE_USER_SUCCESS':
-      setUserToken(response.data.user.token);
       return response.data.user;
     default:
       return state;

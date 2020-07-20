@@ -6,12 +6,12 @@ import {
 import { connect } from 'react-redux';
 import SignIn from './form/signIn';
 import SignUp from './form/signUp';
-import Main from './main';
+import Main from './main/main';
 import { Content } from './style';
 import HeaderPage from './header/header';
 import { signUpPage, signInPage, mainPage } from '../services/routs';
 import { currentUser } from '../store/actions';
-import { getUserToken } from './helpers';
+import { getUserToken } from '../utils/helpers';
 
 const PrivateRoute = ({ children, redirect, redirectTo }) => (
   <Route

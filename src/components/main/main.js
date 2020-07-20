@@ -1,11 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { FormWrap } from './style';
-import { currentUser } from '../store/actions';
+import { MainWrap } from './style';
+import { currentUser } from '../../store/actions';
 
 class Main extends React.Component {
   render() {
-    return (<FormWrap>Все получилось :)</FormWrap>);
+    return (<MainWrap>Все получилось :)</MainWrap>);
   }
 }
 

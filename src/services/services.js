@@ -6,7 +6,7 @@ import {
   currentUserPath,
 } from './path';
 
-import { getUserToken } from '../components/helpers';
+import { getUserToken } from '../utils/helpers';
 
 export const registrationUserRequest = (value) => {
   const requestParameters = {
